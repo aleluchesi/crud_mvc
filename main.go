@@ -1,12 +1,13 @@
 package main
 
 import (
-	"log"
 	"os"
 
+	logger "github.com/aleluchesi/crud_mvc/src/configuration"
 	"github.com/aleluchesi/crud_mvc/src/controller/routes"
 	"github.com/gin-gonic/gin"
 	"github.com/joho/godotenv"
+	"go.uber.org/zap"
 )
 
 func main() {
@@ -14,7 +15,7 @@ func main() {
 	// Load .env file
 	err := godotenv.Load()
 	if err != nil {
-		log.Fatal("Error loading .env file")
+		logger.Error("Error loading .env file", err, zap.String("journey", "main"))
 	}
 
 	router := gin.Default()
@@ -22,7 +23,7 @@ func main() {
 	routes.InitiRoutes(&router.RouterGroup)
 
 	if err := router.Run(":" + os.Getenv("PORT_ROUTE")); err != nil {
-		log.Fatal(err)
+		logger.Error("Error starting server", err, zap.String("journey", "main"))
 	}
 
 }
